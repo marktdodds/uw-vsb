@@ -1,4 +1,4 @@
-import secrets from './secrets.config'
+import secrets from '../../config/secrets.config'
 
 
 export default {

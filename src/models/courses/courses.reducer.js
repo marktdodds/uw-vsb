@@ -6,6 +6,10 @@ function coursesReducer(state = {}, action) {
   
   switch (action.type) {
     
+    case symbols.RECEIVED_COURSE_SCHEDULE:
+      console.log(action.data);
+      break;
+    
     default:
       break;
   }

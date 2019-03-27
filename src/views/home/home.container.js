@@ -8,8 +8,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  lookupCourse: () => {
-    dispatch(coursesActions.lookupCourse('1191', 'CS', '245'));
+  loadCourseSchedule: (classNumber) => {
+    dispatch(coursesActions.loadCourseSchedule(classNumber))
   }
 });
 

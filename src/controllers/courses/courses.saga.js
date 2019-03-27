@@ -1,23 +1,16 @@
-import { all, takeLatest, call } from 'redux-saga/effects';
-import { symbols } from "../../models/courses/courses.actions";
+import { all, takeLatest, put } from 'redux-saga/effects';
+import { symbols as coursesSymbols, actions as coursesActions } from '../../models/courses/courses.actions';
+import fetchCourses from './courses.fetch';
 
-function* lookupCourse(action) {
-  console.log(action);
-  try {
-    const url = 'https://api.uwaterloo.ca/v2/courses';
-    const headers = new Headers();
-    const response = yield call(fetch, url);
-    
-    console.log(response.json);
-    
-  } catch (e) {
-    console.log(e);
-  }
-  yield;
+function* loadCourseSchedule(action) {
+  const response = yield fetchCourses.loadCourseSchedule(action.classNumber);
+  const json = yield response.json();
+  yield put(coursesActions.receivedCourseSchedule(json));
 }
 
 export default function* mainSaga() {
   yield all([
+    takeLatest(coursesSymbols.LOAD_COURSE_SCHEDULE, loadCourseSchedule)
   ]);
 }
 

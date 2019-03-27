@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import navigationReducer from './navigation/navigation.reducer';
-import coursesReducer from './courses/courses.reducer';
+import navigation from './navigation/navigation.reducer';
+import courses from './courses/courses.reducer';
 
 const allReducers = combineReducers({
-  navigationReducer,
-  coursesReducer
-})
+  navigation,
+  courses
+});
 
 export default allReducers

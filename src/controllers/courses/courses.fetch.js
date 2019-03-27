@@ -1,7 +1,11 @@
+import endpoints from './courses.endpoints'
+
 export default {
-  
-  courses: () => {
-    return fetch()
+  loadCourseSchedule: (classNumber) => {
+    return fetch(endpoints.uWaterlooApi.construct(
+      endpoints.uWaterlooApi.courses().classNumber(classNumber).schedule()
+    ), {
+      method: 'GET'
+    })
   }
-  
 }
