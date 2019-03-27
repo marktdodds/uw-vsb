@@ -5,7 +5,7 @@ class Home extends Component {
   render() {
     return (
       <div className="App">
-        <button onClick={this.props.test}>Click me</button>
+        <button onClick={this.props.lookupCourse}>Lookup</button>
       </div>
     );
   }
