@@ -7,6 +7,14 @@ export default {
     ), {
       method: 'GET'
     })
+  },
+  
+  getCoursesForTerm: (termId) => {
+    return fetch(endpoints.uWaterlooApi.construct(
+      endpoints.uWaterlooApi.terms().term(termId).courses()
+    ), {
+      method: 'GET'
+    })
   }
   
 }

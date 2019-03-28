@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import LookupModule from './lookup.module'
+import dispatches from '../common/dispatches.common'
 
 const mapStateToProps = (state) => {
   return {
@@ -9,8 +10,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => () => {
-  // const commonDispatches = dispatches(dispatch);
+  const commonDispatches = dispatches(dispatch);
   return {
+    common: {
+      getCoursesForTerm: commonDispatches.getCoursesForTerm
+    }
   }
 };
 
