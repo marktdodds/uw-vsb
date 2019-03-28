@@ -1,0 +1,22 @@
+.header {
+  background-color: #313131;
+  width: 100vw;
+  padding: 15px;
+  color: #ededed;
+  display: flex;
+
+  span {
+    padding: 0 10px;
+  }
+
+  a.link {
+    color: rgba(237, 237, 237, 0.71);
+    text-decoration: none;
+    padding: 0 10px;
+
+    &.activeLink {
+      color: #ededed;
+    }
+  }
+
+}

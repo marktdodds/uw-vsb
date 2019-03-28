@@ -1,10 +1,10 @@
 import { all } from 'redux-saga/effects';
-import { mainSaga } from './main.saga';
 import coursesSaga from './courses/courses.saga'
+import termsSaga from './terms/terms.saga'
 
 export default function* rootSaga() {
   yield all([
-    mainSaga(),
+    termsSaga(),
     coursesSaga()
   ]);
 }

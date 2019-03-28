@@ -5,10 +5,10 @@ import { Provider } from "react-redux";
 import reducers from './models/reducers';
 import createSagaMiddleware from 'redux-saga';
 import './index.css';
-import MainRouter from './views/main-router/main-router';
 import * as serviceWorker from './serviceWorker';
 import rootSaga from './controllers/sagas';
 import logger from 'redux-logger';
+import RouterContainer from "./views/main-router/router.container";
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
@@ -20,7 +20,7 @@ sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
-    <MainRouter/>
+    <RouterContainer/>
   </Provider>,
   document.getElementById('root'));
 

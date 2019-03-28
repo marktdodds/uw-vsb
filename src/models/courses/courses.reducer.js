@@ -1,6 +1,6 @@
 import { symbols } from './courses.actions';
 
-function coursesReducer(state = {}, action) {
+function courses(state = {}, action) {
   
   let newState = Object.assign({}, state);
   
@@ -17,4 +17,4 @@ function coursesReducer(state = {}, action) {
   return newState;
 }
 
-export default coursesReducer;
+export default courses;

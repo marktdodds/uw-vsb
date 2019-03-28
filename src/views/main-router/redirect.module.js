@@ -5,7 +5,7 @@ class RedirectComponent extends Component {
   
   render() {
     return (
-      <Redirect to='/'/>
+      <Redirect to='/builder'/>
     );
   }
 }

@@ -1,12 +1,12 @@
 import endpoints from '../../config/endpoints.config'
 
 export default {
-  getCourseSchedule: (classNumber) => {
+  getTerms: () => {
     return fetch(endpoints.uWaterlooApi.construct(
-      endpoints.uWaterlooApi.courses().classNumber(classNumber).schedule()
+      endpoints.uWaterlooApi.terms().list()
     ), {
       method: 'GET'
     })
-  },
+  }
   
 }

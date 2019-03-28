@@ -1,6 +1,6 @@
 import { symbols } from './navigation.actions';
 
-function navigationReducer(state = {}, action) {
+function navigation(state = {}, action) {
   
   let newState = Object.assign({}, state);
   
@@ -17,4 +17,4 @@ function navigationReducer(state = {}, action) {
   return newState;
 }
 
-export default navigationReducer;
+export default navigation;

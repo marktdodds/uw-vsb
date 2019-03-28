@@ -3,14 +3,14 @@ import { symbols as coursesSymbols, actions as coursesActions } from '../../mode
 import fetchCourses from './courses.fetch';
 
 function* loadCourseSchedule(action) {
-  const response = yield fetchCourses.loadCourseSchedule(action.classNumber);
+  const response = yield fetchCourses.getCourseSchedule(action.classNumber);
   const json = yield response.json();
   yield put(coursesActions.receivedCourseSchedule(json));
 }
 
 export default function* mainSaga() {
   yield all([
-    takeLatest(coursesSymbols.LOAD_COURSE_SCHEDULE, loadCourseSchedule)
+    takeLatest(coursesSymbols.GET_COURSE_SCHEDULE, loadCourseSchedule)
   ]);
 }
 
