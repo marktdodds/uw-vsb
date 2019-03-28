@@ -4,7 +4,7 @@ import BuilderModule from './builder.module'
 
 const mapStateToProps = (state) => {
   return {
-    test: state.terms
+    terms: state.terms
   }
 };
 
@@ -16,6 +16,6 @@ const BuilderContainer = connect(
   mapDispatchToProps,
   null,
   {pure: true},
-)(BuilderModule)
+)(BuilderModule);
 
 export default withRouter(BuilderContainer)

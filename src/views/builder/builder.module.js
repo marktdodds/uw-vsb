@@ -13,8 +13,8 @@ class BuilderModule extends Component {
     return (
       <div className="App">
         <button onClick={this.lookupCourse.bind(this)}>Lookup</button>
-        <p>Current Term: {this.props.test.terms.current.name}</p>
-        <p>Next Term: {this.props.test.terms.next.name}</p>
+        <p>Current Term: {this.props.terms.current.name}</p>
+        <p>Next Term: {this.props.terms.next.name}</p>
       </div>
     );
   }

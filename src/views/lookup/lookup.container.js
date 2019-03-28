@@ -4,7 +4,7 @@ import LookupModule from './lookup.module'
 
 const mapStateToProps = (state) => {
   return {
-    test: state.terms
+    terms: state.terms,
   }
 };
 
