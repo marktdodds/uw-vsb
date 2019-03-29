@@ -15,6 +15,14 @@ export default {
     ), {
       method: 'GET'
     })
-  }
+  },
+  
+  getCourseScheduleForTerm: (termId, subject, catalogNumber) => {
+    return fetch(endpoints.uWaterlooApi.construct(
+      endpoints.uWaterlooApi.terms().term(termId).subject(subject).catalogNumber(catalogNumber).schedule()
+    ), {
+      method: 'GET'
+    })
+  },
   
 }

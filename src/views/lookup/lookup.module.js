@@ -3,8 +3,10 @@ import styles from './lookup.module.css';
 import Dropdown from 'react-bootstrap/Dropdown'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
+import helpers from '../../common/helpers.common'
 
 class LookupModule extends Component {
   
@@ -14,38 +16,30 @@ class LookupModule extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        courseQuery: '',
-        termId: ''
-      },
-      matchedCourses: []
+      courseQuery: '',
+      termId: '',
+      matchedCourses: [],
+      courseToView: {
+        subject: '',
+        catalogNumber: ''
+      }
     };
     
+    // Form handlers
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleCourseSearchInput = this.handleCourseSearchInput.bind(this);
     this.handleTermSelectionInput = this.handleTermSelectionInput.bind(this);
-    this.updateFormState = this.updateFormState.bind(this);
-  }
-  
-  /*
-  * Update a key/value pair in the form state
-   */
-  updateFormState(key, value) {
-    this.setState(oldState => ({
-      form: {
-        ...oldState.form,
-        [key]: value
-      }
-    }));
-  }
-  
-  /*
-  * Search for a course using the courseQuery
-   */
-  filterCourses(query) {
-    this.setState(oldState => ({
-      matchedCourses: this.props.terms.availableCourses[oldState.form.termId].filter(course => course.code.includes(query))
-    }))
+    
+    // Getters/Settings
+    this.filterCourses = this.filterCourses.bind(this);
+    this.getCourseLookup = this.getCourseLookup.bind(this);
+    
+    // View helpers
+    this.courseScheduleForTerm = this.courseScheduleForTerm.bind(this);
+    
+    // Logic checks
+    this.isCourseInformationLoaded = this.isCourseInformationLoaded.bind(this);
+    this.isCourseScheduleForTermLoaded = this.isCourseScheduleForTermLoaded.bind(this);
   }
   
   /*
@@ -53,7 +47,7 @@ class LookupModule extends Component {
    */
   handleCourseSearchInput(event) {
     const query = event.target.value;
-    this.updateFormState('courseQuery', query);
+    this.setState({courseQuery: query});
     this.filterCourses(query.replace(/ /g, '').toUpperCase());
   }
   
@@ -61,7 +55,7 @@ class LookupModule extends Component {
   * Handle term selection input
    */
   handleTermSelectionInput(termId) {
-    this.updateFormState('termId', termId);
+    this.setState({termId: termId});
     if (!this.props.terms.availableCourses[termId]) {
       this.props.common.getCoursesForTerm(termId);
     }
@@ -73,6 +67,56 @@ class LookupModule extends Component {
   handleFormSubmit(event) {
     event.preventDefault();
     console.log(this.state.form);
+  }
+  
+  /*
+  * Search for a course using the courseQuery
+   */
+  filterCourses(query) {
+    this.setState(oldState => ({
+      matchedCourses: this.props.terms.availableCourses[oldState.termId].filter(course => course.code.includes(query))
+    }))
+  }
+  
+  /*
+  * Get the information for a specific course
+  * Get the schedule for a specific course in a specific term
+   */
+  getCourseLookup(course) {
+    this.props.common.getCourseInformation(course.subject, course.catalogNumber);
+    this.props.common.getCourseScheduleForTerm(this.state.termId, course.subject, course.catalogNumber);
+    this.setState({
+      courseToView: {
+        subject: course.subject,
+        catalogNumber: course.catalogNumber,
+        view: true
+      }
+    })
+  }
+  
+  /*
+  * Get the course schedule for a course and term from props
+   */
+  
+  courseScheduleForTerm(termId, course) {
+    return this.props.terms[termId][course.subject][course.catalogNumber]
+  }
+  
+  /*
+  * Check if course information is loaded into memort
+   */
+  isCourseInformationLoaded(course) {
+    return this.props.courses.hasOwnProperty(course.subject) &&
+      this.props.courses[course.subject].hasOwnProperty(course.catalogNumber);
+  }
+  
+  /*
+  * Check if course schedule for a specific term is loaded
+   */
+  isCourseScheduleForTermLoaded(termId, course) {
+    return this.props.terms.hasOwnProperty(termId) &&
+      this.props.terms[termId].hasOwnProperty(course.subject) &&
+      this.props.terms[termId][course.subject].hasOwnProperty(course.catalogNumber);
   }
   
   /*
@@ -92,7 +136,7 @@ class LookupModule extends Component {
               
               <Dropdown.Toggle variant="success" id="term-dropdown">
                 {(this.props.terms.listings.find(term => {
-                  return term.id.toString() === this.state.form.termId.toString()
+                  return term.id.toString() === this.state.termId.toString()
                 }) || {name: 'Select a term'}).name}
               </Dropdown.Toggle>
               
@@ -109,7 +153,8 @@ class LookupModule extends Component {
             </Dropdown>
             
             <Col>
-              <Form.Control value={this.state.form.courseQuery} disabled={!this.state.form.termId || !this.props.terms.availableCourses[this.state.form.termId]} onChange={this.handleCourseSearchInput} placeholder="Course"/>
+              <Form.Control value={this.state.courseQuery} disabled={!this.state.termId || !this.props.terms.availableCourses[this.state.termId]}
+                            onChange={this.handleCourseSearchInput} placeholder="Course"/>
             </Col>
             
             <Button variant="primary" type="submit">
@@ -122,10 +167,57 @@ class LookupModule extends Component {
         {this.state.matchedCourses.length < 20 &&
         <div>
           {this.state.matchedCourses.map(course => {
-            return <p key={course.code}>{course.code} - {course.description}</p>
+            return <p key={course.code} onClick={e => {
+              this.getCourseLookup(course)
+            }}>{course.code} - {course.description}</p>
           })}
         </div>
         }
+        {this.state.courseToView.view && this.isCourseScheduleForTermLoaded(this.state.termId, this.state.courseToView) &&
+        <Table>
+          <thead>
+          <tr>
+            <th>Section</th>
+            <th>Class</th>
+            <th>Campus</th>
+            <th>Enrolled</th>
+            <th>Time</th>
+            <th>Days</th>
+            <th>Location</th>
+            <th>Instructors</th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.courseScheduleForTerm(this.state.termId, this.state.courseToView)['lectures'].map(lecture => {
+            return <tr key={helpers.uniqueId()}>
+              <td>{lecture['section']}</td>
+              <td>{lecture['class_number']}</td>
+              <td>{lecture['campus']}</td>
+              <td>{lecture['enrollment_total']}/{lecture['enrollment_capacity']}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                    {Class['date']['start_time']} - {Class['date']['end_time']}
+                </div>
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                    {Class['date']['weekdays']}
+                </div>
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                    {Class['location']['building']} {Class['location']['room']}
+                </div>
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                    {Class['instructors'].join(', ')}
+                </div>
+              })}</td>
+            </tr>
+          })}
+          </tbody>
+        </Table>}
       
       </div>
     );

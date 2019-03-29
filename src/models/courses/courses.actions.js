@@ -1,18 +1,22 @@
 export const symbols = {
-  GET_COURSE_SCHEDULE: Symbol('COURSES:GET_COURSE_SCHEDULE'),
-  RECEIVED_COURSE_SCHEDULE: Symbol('COURSES:RECEIVED_COURSE_SCHEDULE'),
+  GET_COURSE_INFORMATION: Symbol('COURSES:GET_COURSE_INFORMATION'),
+  RECEIVED_COURSE_INFORMATION: Symbol('COURSES:RECEIVED_COURSE_INFORMATION'),
 };
 
 export const actions = {
   
-  getCourseSchedule: (classNumber) => ({
-    type: symbols.GET_COURSE_SCHEDULE,
-    classNumber: classNumber
+  /*
+  * Specific course information for a specific course
+   */
+  getCourseInformation: (subject, catalogNumber) => ({
+    type: symbols.GET_COURSE_INFORMATION,
+    subject: subject,
+    catalogNumber: catalogNumber
   }),
   
-  receivedTerms: (data) => ({
-    type: symbols.RECEIVED_COURSE_SCHEDULE,
-    data: data
-  })
+  receivedCourseInformation: (response) => ({
+    type: symbols.RECEIVED_COURSE_INFORMATION,
+    response: response
+  }),
   
 };

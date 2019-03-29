@@ -1,16 +1,16 @@
 import { all, takeLatest, put } from 'redux-saga/effects';
-import { symbols as coursesSymbols, actions as coursesActions } from '../../models/courses/courses.actions';
+import { symbols, actions } from '../../models/courses/courses.actions';
 import fetchCourses from './courses.fetch';
 
-function* loadCourseSchedule(action) {
-  const response = yield fetchCourses.getCourseSchedule(action.classNumber);
+function* getCourseInformation(action) {
+  const response = yield fetchCourses.getCourseInformation(action.subject, action.catalogNumber);
   const json = yield response.json();
-  yield put(coursesActions.receivedCourseSchedule(json));
+  yield put(actions.receivedCourseInformation(json));
 }
 
 export default function* mainSaga() {
   yield all([
-    takeLatest(coursesSymbols.GET_COURSE_SCHEDULE, loadCourseSchedule)
+    takeLatest(symbols.GET_COURSE_INFORMATION, getCourseInformation)
   ]);
 }
 

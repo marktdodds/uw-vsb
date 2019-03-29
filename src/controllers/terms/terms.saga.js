@@ -14,10 +14,17 @@ function* getCoursesForTerm(action) {
   yield put(actions.receivedCoursesForTerm(json, action.termId));
 }
 
+function* getCourseScheduleForTerm(action) {
+  const response = yield fetchCourses.getCourseScheduleForTerm(action.termId, action.subject, action.catalogNumber);
+  const json = yield response.json();
+  yield put(actions.receivedCourseScheduleForTerm(json, action.termId, action.subject, action.catalogNumber));
+}
+
 export default function* mainSaga() {
   yield all([
     takeLatest(symbols.GET_TERMS, getTerms),
-    takeLatest(symbols.GET_COURSES_FOR_TERM, getCoursesForTerm)
+    takeLatest(symbols.GET_COURSES_FOR_TERM, getCoursesForTerm),
+    takeLatest(symbols.GET_COURSE_SCHEDULE_FOR_TERM, getCourseScheduleForTerm),
   ]);
 }
 
