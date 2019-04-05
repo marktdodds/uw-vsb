@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import helpers from '../../common/helpers.common'
+import checks from '../../common/checks.common'
 
 class LookupModule extends Component {
   
@@ -17,7 +18,7 @@ class LookupModule extends Component {
     super(props);
     this.state = {
       courseQuery: '',
-      termId: '',
+      selectedTerm: '',
       matchedCourses: [],
       courseToView: {
         subject: '',
@@ -54,10 +55,10 @@ class LookupModule extends Component {
   /*
   * Handle term selection input
    */
-  handleTermSelectionInput(termId) {
-    this.setState({termId: termId});
-    if (!this.props.terms.availableCourses[termId]) {
-      this.props.common.getCoursesForTerm(termId);
+  handleTermSelectionInput(selectedTerm) {
+    this.setState({selectedTerm: selectedTerm});
+    if (!this.props.terms.availableCourses[selectedTerm]) {
+      this.props.common.getCoursesForTerm(selectedTerm);
     }
   }
   
@@ -74,7 +75,7 @@ class LookupModule extends Component {
    */
   filterCourses(query) {
     this.setState(oldState => ({
-      matchedCourses: this.props.terms.availableCourses[oldState.termId].filter(course => course.code.includes(query))
+      matchedCourses: this.props.terms.availableCourses[oldState.selectedTerm].filter(course => course.code.includes(query))
     }))
   }
   
@@ -84,7 +85,7 @@ class LookupModule extends Component {
    */
   getCourseLookup(course) {
     this.props.common.getCourseInformation(course.subject, course.catalogNumber);
-    this.props.common.getCourseScheduleForTerm(this.state.termId, course.subject, course.catalogNumber);
+    this.props.common.getCourseScheduleForTerm(this.state.selectedTerm, course.subject, course.catalogNumber);
     this.setState({
       courseToView: {
         subject: course.subject,
@@ -98,25 +99,22 @@ class LookupModule extends Component {
   * Get the course schedule for a course and term from props
    */
   
-  courseScheduleForTerm(termId, course) {
-    return this.props.terms[termId][course.subject][course.catalogNumber]
+  courseScheduleForTerm(selectedTerm, course) {
+    return this.props.terms[selectedTerm][course.subject][course.catalogNumber]
   }
   
   /*
-  * Check if course information is loaded into memort
+  * Check if course information is loaded into memory
    */
   isCourseInformationLoaded(course) {
-    return this.props.courses.hasOwnProperty(course.subject) &&
-      this.props.courses[course.subject].hasOwnProperty(course.catalogNumber);
+    return checks.loaded.courseInformation(this.props.courses, course);
   }
   
   /*
   * Check if course schedule for a specific term is loaded
    */
-  isCourseScheduleForTermLoaded(termId, course) {
-    return this.props.terms.hasOwnProperty(termId) &&
-      this.props.terms[termId].hasOwnProperty(course.subject) &&
-      this.props.terms[termId][course.subject].hasOwnProperty(course.catalogNumber);
+  isCourseScheduleForTermLoaded(selectedTerm, course) {
+    return checks.loaded.courseScheduleForTerm(this.props.terms, course, selectedTerm);
   }
   
   /*
@@ -136,7 +134,7 @@ class LookupModule extends Component {
               
               <Dropdown.Toggle variant="success" id="term-dropdown">
                 {(this.props.terms.listings.find(term => {
-                  return term.id.toString() === this.state.termId.toString()
+                  return term.id.toString() === this.state.selectedTerm.toString()
                 }) || {name: 'Select a term'}).name}
               </Dropdown.Toggle>
               
@@ -153,7 +151,7 @@ class LookupModule extends Component {
             </Dropdown>
             
             <Col>
-              <Form.Control value={this.state.courseQuery} disabled={!this.state.termId || !this.props.terms.availableCourses[this.state.termId]}
+              <Form.Control value={this.state.courseQuery} disabled={!this.state.selectedTerm || !this.props.terms.availableCourses[this.state.selectedTerm]}
                             onChange={this.handleCourseSearchInput} placeholder="Course"/>
             </Col>
             
@@ -173,7 +171,7 @@ class LookupModule extends Component {
           })}
         </div>
         }
-        {this.state.courseToView.view && this.isCourseScheduleForTermLoaded(this.state.termId, this.state.courseToView) &&
+        {this.state.courseToView.view && this.isCourseScheduleForTermLoaded(this.state.selectedTerm, this.state.courseToView) &&
         <Table>
           <thead>
           <tr>
@@ -188,7 +186,7 @@ class LookupModule extends Component {
           </tr>
           </thead>
           <tbody>
-          {this.courseScheduleForTerm(this.state.termId, this.state.courseToView)['lectures'].map(lecture => {
+          {this.courseScheduleForTerm(this.state.selectedTerm, this.state.courseToView)['lectures'].map(lecture => {
             return <tr key={helpers.uniqueId()}>
               <td>{lecture['section']}</td>
               <td>{lecture['class_number']}</td>
@@ -196,22 +194,22 @@ class LookupModule extends Component {
               <td>{lecture['enrollment_total']}/{lecture['enrollment_capacity']}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
-                    {Class['date']['start_time']} - {Class['date']['end_time']}
+                  {Class['date']['start_time']} - {Class['date']['end_time']}
                 </div>
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
-                    {Class['date']['weekdays']}
+                  {Class['date']['weekdays']}
                 </div>
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
-                    {Class['location']['building']} {Class['location']['room']}
+                  {Class['location']['building']} {Class['location']['room']}
                 </div>
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
-                    {Class['instructors'].join(', ')}
+                  {Class['instructors'].join(', ')}
                 </div>
               })}</td>
             </tr>

@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+}
+
+.searchPanel {
+  width: 35%;
+  position: relative;
+  padding: 10px;
+  border-right: 1px solid #202020;
+
+  .termSelect {
+
+    text-align: center;
+
+    span {
+      padding: 0 10px;
+    }
+  }
+
+  .courseQuery {
+    margin: 10px 20px;
+    position: relative;
+
+    input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .courseMatches {
+      position: absolute;
+      top: 110%;
+      left: -1%;
+      width: 102%;
+      border: 1px solid #363636;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 10;
+
+      .course {
+        padding: 10px;
+
+        &:hover {
+          background: #313131;
+          color: white;
+        }
+      }
+
+    }
+
+  }
+
+  .selectedCourses {
+    position: relative;
+    margin-top: 20px;
+
+    .course {
+      width: 88%;
+      margin-left: 6%;
+      background: #63bdff;
+    }
+
+  }
+
+}
+
+.timetable {
+  width: 65%;
+  position: relative;
+}

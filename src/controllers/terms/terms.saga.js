@@ -9,15 +9,15 @@ function* getTerms(action) {
 }
 
 function* getCoursesForTerm(action) {
-  const response = yield fetchCourses.getCoursesForTerm(action.termId);
+  const response = yield fetchCourses.getCoursesForTerm(action.selectedTerm);
   const json = yield response.json();
-  yield put(actions.receivedCoursesForTerm(json, action.termId));
+  yield put(actions.receivedCoursesForTerm(json, action.selectedTerm));
 }
 
 function* getCourseScheduleForTerm(action) {
-  const response = yield fetchCourses.getCourseScheduleForTerm(action.termId, action.subject, action.catalogNumber);
+  const response = yield fetchCourses.getCourseScheduleForTerm(action.selectedTerm, action.subject, action.catalogNumber);
   const json = yield response.json();
-  yield put(actions.receivedCourseScheduleForTerm(json, action.termId, action.subject, action.catalogNumber));
+  yield put(actions.receivedCourseScheduleForTerm(json, action.selectedTerm, action.subject, action.catalogNumber));
 }
 
 export default function* mainSaga() {

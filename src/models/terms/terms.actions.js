@@ -29,13 +29,13 @@ export const actions = {
    */
   getCoursesForTerm: (termId) => ({
     type: symbols.GET_COURSES_FOR_TERM,
-    termId: termId
+    selectedTerm: termId
   }),
   
   receivedCoursesForTerm: (response, termId) => ({
     type: symbols.RECEIVED_COURSES_FOR_TERM,
     response: response,
-    termId: termId
+    selectedTerm: termId
   }),
   
   /*
@@ -43,14 +43,14 @@ export const actions = {
    */
   getCourseScheduleForTerm: (termId, subject, catalogNumber) => ({
     type: symbols.GET_COURSE_SCHEDULE_FOR_TERM,
-    termId: termId,
+    selectedTerm: termId,
     subject: subject,
     catalogNumber: catalogNumber
   }),
   
   receivedCourseScheduleForTerm: (response, termId, subject, catalogNumber) => ({
     type: symbols.RECEIVED_COURSE_SCHEDULE_FOR_TERM,
-    termId: termId,
+    selectedTerm: termId,
     response: response,
     subject: subject,
     catalogNumber: catalogNumber
