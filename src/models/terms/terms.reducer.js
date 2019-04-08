@@ -1,5 +1,5 @@
 import { symbols } from './terms.actions';
-import helpers from '../../common/helpers.common'
+import helpers from '../../common/helpers'
 
 function terms(state = {
   listings: [],

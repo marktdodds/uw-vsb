@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import BuilderModule from './builder.module'
-import dispatches from '../../common/dispatches.common';
+import dispatches from '../../common/dispatches';
 import { actions } from '../../models/builder/builder.actions';
 
 const mapStateToProps = (state) => {

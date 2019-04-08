@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import LookupModule from './lookup.module'
-import dispatches from '../../common/dispatches.common'
+import dispatches from '../../common/dispatches'
 
 const mapStateToProps = (state) => {
   return {

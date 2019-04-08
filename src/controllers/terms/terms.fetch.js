@@ -1,4 +1,4 @@
-import endpoints from '../../config/endpoints.config'
+import { endpoints } from '../../config';
 
 export default {
   getTerms: () => {

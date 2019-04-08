@@ -1,5 +1,5 @@
 import { symbols } from './courses.actions';
-import helpers from '../../common/helpers.common'
+import helpers from '../../common/helpers'
 
 function courses(state = {
 }, action) {

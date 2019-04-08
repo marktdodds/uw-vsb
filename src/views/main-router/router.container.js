@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import RouterModule from './router.module'
-import dispatches from '../../common/dispatches.common'
+import dispatches from '../../common/dispatches'
 
 const mapStateToProps = (state) => {
   return {}

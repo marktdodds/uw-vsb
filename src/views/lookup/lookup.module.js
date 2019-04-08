@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import styles from './lookup.module.css';
-import Dropdown from 'react-bootstrap/Dropdown'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
-import helpers from '../../common/helpers.common'
-import checks from '../../common/checks.common'
+import { helpers, checks } from '../../common';
 
 class LookupModule extends Component {
   
@@ -76,7 +75,7 @@ class LookupModule extends Component {
   filterCourses(query) {
     this.setState(oldState => ({
       matchedCourses: this.props.terms.availableCourses[oldState.selectedTerm].filter(course => course.code.includes(query))
-    }))
+    }));
   }
   
   /*
@@ -92,7 +91,7 @@ class LookupModule extends Component {
         catalogNumber: course.catalogNumber,
         view: true
       }
-    })
+    });
   }
   
   /*
@@ -100,7 +99,7 @@ class LookupModule extends Component {
    */
   
   courseScheduleForTerm(selectedTerm, course) {
-    return this.props.terms[selectedTerm][course.subject][course.catalogNumber]
+    return this.props.terms[selectedTerm][course.subject][course.catalogNumber];
   }
   
   /*
@@ -134,7 +133,7 @@ class LookupModule extends Component {
               
               <Dropdown.Toggle variant="success" id="term-dropdown">
                 {(this.props.terms.listings.find(term => {
-                  return term.id.toString() === this.state.selectedTerm.toString()
+                  return term.id.toString() === this.state.selectedTerm.toString();
                 }) || {name: 'Select a term'}).name}
               </Dropdown.Toggle>
               
@@ -166,8 +165,8 @@ class LookupModule extends Component {
         <div>
           {this.state.matchedCourses.map(course => {
             return <p key={course.code} onClick={e => {
-              this.getCourseLookup(course)
-            }}>{course.code} - {course.description}</p>
+              this.getCourseLookup(course);
+            }}>{course.code} - {course.description}</p>;
           })}
         </div>
         }
@@ -195,24 +194,24 @@ class LookupModule extends Component {
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
                   {Class['date']['start_time']} - {Class['date']['end_time']}
-                </div>
+                </div>;
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
                   {Class['date']['weekdays']}
-                </div>
+                </div>;
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
                   {Class['location']['building']} {Class['location']['room']}
-                </div>
+                </div>;
               })}</td>
               <td>{lecture['classes'].map(Class => {
                 return <div key={helpers.uniqueId()}>
                   {Class['instructors'].join(', ')}
-                </div>
+                </div>;
               })}</td>
-            </tr>
+            </tr>;
           })}
           </tbody>
         </Table>}

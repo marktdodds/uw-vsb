@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import styles from './builder.module.scss';
 import FormControl from 'react-bootstrap/FormControl';
-import checks from '../../common/checks.common';
-import divWithClassName from "react-bootstrap/es/utils/divWithClassName";
+import TimetableContainer from './timetable/timetable.container';
+import { checks } from '../../common';
 
 class BuilderModule extends Component {
   
@@ -29,7 +29,7 @@ class BuilderModule extends Component {
       selectedTerm: term.id
     });
     if (!checks.loaded.coursesForTerm(this.props._terms, term.id)) {
-      this.props.common.getCoursesForTerm(term.id)
+      this.props.common.getCoursesForTerm(term.id);
     }
   }
   
@@ -61,7 +61,7 @@ class BuilderModule extends Component {
     this.setState({
       courseQuery: '',
       matchedCourses: []
-    })
+    });
   }
   
   /**
@@ -70,7 +70,7 @@ class BuilderModule extends Component {
    * @param selectedTerm The term to search for a course in
    */
   filterCourses(query, selectedTerm) {
-    return this.props._terms.availableCourses[selectedTerm].filter(course => course.code.includes(query.replace(/ /g, '').toUpperCase()))
+    return this.props._terms.availableCourses[selectedTerm].filter(course => course.code.includes(query.replace(/ /g, '').toUpperCase()));
   }
   
   render() {
@@ -80,8 +80,7 @@ class BuilderModule extends Component {
           <div className={styles.termSelect}>
             Select term:
             {this.props._terms.listings.map(term => {
-              return term.id >= this.props._terms.current.id ?
-                <span key={term.id} onClick={e => this.handleTermSelection(e, term)}>
+              return term.id >= this.props._terms.current.id ? <span key={term.id} onClick={e => this.handleTermSelection(e, term)}>
                   <input type="radio" onChange={e => this.handleTermSelection(e, term)} checked={this.state.selectedTerm === term.id}/>{term.name}
                 </span> : '';
             })}
@@ -94,7 +93,7 @@ class BuilderModule extends Component {
             {0 < this.state.matchedCourses.length && this.state.matchedCourses.length <= 10 &&
             <div className={styles.courseMatches}>
               {this.state.matchedCourses.map(course => {
-                return <div key={course.code} className={styles.course} onClick={e => this.handleAddCourseToBuilder(e, course)}>{course.code} - {course.description}</div>
+                return <div key={course.code} className={styles.course} onClick={e => this.handleAddCourseToBuilder(e, course)}>{course.code} - {course.description}</div>;
               })}
             </div>}
           </div>
@@ -109,11 +108,11 @@ class BuilderModule extends Component {
                   <p>{courseInfo.description}</p>
                   <p>Pre-requisites: {courseInfo.prerequisites}</p>
                   <p>Anti-requisites: {courseInfo.antirequisites}</p>
-                </div>
+                </div>;
               } else {
                 return <div key={course.subject + course.catalogNumber}>
                 
-                </div>
+                </div>;
               }
             })}
           
@@ -122,7 +121,7 @@ class BuilderModule extends Component {
         
         </div>
         <div className={styles.timetable}>
-          {/*Timetable here with pass in props*/}
+          {{/*this.state.selectedTerm*/} && <TimetableContainer selectedTerm={this.state.selectedTerm}/>}
         </div>
       </div>
     );

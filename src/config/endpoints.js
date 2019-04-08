@@ -1,5 +1,4 @@
-import secrets from './secrets.config'
-
+import { secrets } from './index';
 
 export default {
   uWaterlooApi: new function () {
@@ -26,7 +25,7 @@ export default {
           _catalogNumber.schedule = () => `${_catalogNumber.base()}/schedule`;
           _catalogNumber.prerequisites = () => `${_catalogNumber.base()}/prerequisites`;
           _catalogNumber.examSchedule = () => `${_catalogNumber.base()}/examschedule`;
-        }()
+        }();
       }();
     }();
     
@@ -61,4 +60,4 @@ export default {
     
     _root.construct = (url) => `${url}.json?key=${secrets.uWaterlooOpenDataKey}`;
   }(),
-}
+};

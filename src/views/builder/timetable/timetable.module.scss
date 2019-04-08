@@ -1,0 +1,65 @@
+.container {
+  overflow-y: auto;
+}
+
+$borderColorDark: #5e5e5e;
+$borderColorMedium: #8f8f8f;
+$borderColorLight: #c1c1c1;
+
+.timetable {
+  position: relative;
+  width: 90%;
+  margin-left: 5%;
+  border: 1px solid $borderColorDark;
+  border-bottom-width: 0;
+  border-right-width: 0;
+  background: #f0f0f0;
+
+  .row {
+    height: 6vh;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid $borderColorDark;
+
+    .time {
+      border-right: 1px solid $borderColorDark;
+      width: 10%;
+    }
+
+    .innerRow {
+      width: 90%;
+      position: relative;
+
+      .columnContainer {
+        width: 100%;
+        height: 50%;
+        position: relative;
+        display: flex;
+
+        &:last-of-type {
+          border-top: 1px solid $borderColorLight;
+        }
+
+        .column {
+          width: 20%;
+          height: 100%;
+          border-right: 1px solid $borderColorMedium;
+        }
+      }
+
+    }
+
+  }
+
+  .block {
+
+    background: blue;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+  }
+
+}
