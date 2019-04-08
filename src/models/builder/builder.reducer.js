@@ -1,30 +1,29 @@
 import { symbols } from './builder.actions';
+import { symbols as termsSymbols } from '../terms/terms.actions'
 
 function builder(state = {
   courses: [],
-  possibleCombinations: []
+  coursesChanged: false,
 }, action) {
   
   let newState = Object.assign({}, state);
-  let updateCombinations = false;
+  newState.coursesChanged = false;
   
   switch (action.type) {
     
     case symbols.ADD_COURSE:
       if (!newState.courses.includes(action.course)) {
         newState.courses.push(action.course);
-        updateCombinations = true;
+        newState.coursesChanged = true;
       }
+      break;
+    
+    case termsSymbols.RECEIVED_COURSE_SCHEDULE_FOR_TERM:
+      newState.coursesChanged = true;
       break;
     
     default:
       break;
-  }
-  
-  if (updateCombinations) {
-  
-  
-  
   }
   
   return newState;

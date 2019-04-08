@@ -213,6 +213,34 @@ class LookupModule extends Component {
               })}</td>
             </tr>;
           })}
+          {this.courseScheduleForTerm(this.state.selectedTerm, this.state.courseToView)['tutorials'].map(lecture => {
+            return <tr key={helpers.uniqueId()}>
+              <td>{lecture['section']}</td>
+              <td>{lecture['class_number']}</td>
+              <td>{lecture['campus']}</td>
+              <td>{lecture['enrollment_total']}/{lecture['enrollment_capacity']}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                  {Class['date']['start_time']} - {Class['date']['end_time']}
+                </div>;
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                  {Class['date']['weekdays']}
+                </div>;
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                  {Class['location']['building']} {Class['location']['room']}
+                </div>;
+              })}</td>
+              <td>{lecture['classes'].map(Class => {
+                return <div key={helpers.uniqueId()}>
+                  {Class['instructors'].join(', ')}
+                </div>;
+              })}</td>
+            </tr>;
+          })}
           </tbody>
         </Table>}
       

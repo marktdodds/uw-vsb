@@ -1,3 +1,4 @@
 import TimetableTemplate from './timetable';
+import ClassTemplate from './class';
 
-export { TimetableTemplate };
+export { TimetableTemplate, ClassTemplate };

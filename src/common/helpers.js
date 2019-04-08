@@ -24,6 +24,10 @@ export default {
     const split = time.split(':');
     if (split.length !== 2) throw Error('Invalid time');
     return parseInt(split[0]) * 100 + (parseInt(split[1]) / 60) * 100
+  },
+  
+  splitDays: (string) => {
+    return string.match(/([A-Z][^A-Z]*)/g);
   }
   
 };

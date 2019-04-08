@@ -52,13 +52,15 @@ $borderColorLight: #c1c1c1;
 
   }
 
-  .block {
+  .classBlock {
 
     background: blue;
     border-radius: 5px;
     position: absolute;
     top: 0;
     left: 0;
+    width: 18%;
+    height: 3vh;
 
   }
 
