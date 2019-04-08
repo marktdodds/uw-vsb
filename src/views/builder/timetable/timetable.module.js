@@ -54,7 +54,12 @@ class TimetableModule extends Component {
         if (prev.length === 0) {
           return current;
         }
-        return prev.flatMap(i => current.map(l => i.concat(l)))
+        console.warn(current);
+        return prev.flatMap(i => current.reduce((prev, l) => {
+          if (!l.some(lClasses => lClasses['classes'].some(lClass => i.some(iClasses => iClasses['classes'].some(iClass => checks.classes.overlap(lClass['date'], iClass['date']))))))
+            prev.push(i.concat(l));
+          return prev;
+        }, []))
       }, tmp[0]);
     }
   }
@@ -76,15 +81,17 @@ class TimetableModule extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps._builder.coursesChanged) {
       this.setState({
-        currentClassCombination: 0
+        currentClassCombination: 0,
       });
+      this.regenerateClassCombinations = true;
     }
   }
   
   render() {
     
-    if (this.props._builder.coursesChanged) {
+    if (this.props._builder.coursesChanged && this.regenerateClassCombinations) {
       this.generateClassCombinations();
+      this.regenerateClassCombinations = false;
       this.updateClasses = true;
     }
     
