@@ -19,7 +19,12 @@ export default class ClassTemplate extends PureComponent {
                           left: `${(10 + 18 * (constants.days[day] || 0))}%`,
                           height: `${((etInt - stInt) / 100) * 6}vh`
                         }}>
-              {this.props.class['title']} - {this.props.class['class_number']}
+              <span>
+              {this.props.class['subject']}{this.props.class['catalog_number']}
+              </span>
+              <span>
+              {this.props.class['section']}
+              </span>
             </div>
           })
         })}

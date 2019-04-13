@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './builder.module.scss';
 import FormControl from 'react-bootstrap/FormControl';
 import TimetableContainer from './timetable/timetable.container';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { checks } from '../../common';
 
 class BuilderModule extends Component {
@@ -13,10 +14,12 @@ class BuilderModule extends Component {
       courseQuery: '',
       matchedCourses: [],
     };
+    this.filterCourses = this.filterCourses.bind(this);
     this.handleTermSelection = this.handleTermSelection.bind(this);
     this.handleCourseQuery = this.handleCourseQuery.bind(this);
-    this.filterCourses = this.filterCourses.bind(this);
     this.handleAddCourseToBuilder = this.handleAddCourseToBuilder.bind(this);
+    this.handleRemoveCourseFromBuilder = this.handleRemoveCourseFromBuilder.bind(this);
+    this.handleToggleCourse = this.handleToggleCourse.bind(this);
   }
   
   /**
@@ -65,6 +68,22 @@ class BuilderModule extends Component {
   }
   
   /**
+   * Remove a course from the course builder state
+   * @param course The course to remove
+   */
+  handleRemoveCourseFromBuilder(course) {
+    this.props.builder.removeCourse(course);
+  }
+  
+  /**
+   * Toggle a course (enable/disable) from the builder
+   * @param course The course to toggle
+   */
+  handleToggleCourse(course) {
+    course.enabled ? this.props.builder.disableCourse(course) : this.props.builder.enableCourse(course);
+  }
+  
+  /**
    * Filter available courses based on a query
    * @param query The search query to match by
    * @param selectedTerm The term to search for a course in
@@ -104,15 +123,23 @@ class BuilderModule extends Component {
               if (checks.loaded.courseInformation(this.props._courses, course)) {
                 const courseInfo = this.props._courses[course.subject][course.catalogNumber];
                 return <div key={course.subject + course.catalogNumber} className={styles.course}>
-                  <p>{course.subject + course.catalogNumber}<br/>{courseInfo.title}</p>
-                  <p>{courseInfo.description}</p>
+                  <p>
+                    <span onClick={() => {this.handleToggleCourse(course)}}>
+                      <FontAwesomeIcon
+                        style={{marginRight: '10px'}}
+                        icon={course.enabled ? ['fas', 'check'] : ['far', 'square']}/>
+                      </span>
+                    {course.subject + course.catalogNumber}: {courseInfo.title}
+                  </p>
                   <p>Pre-requisites: {courseInfo.prerequisites}</p>
                   <p>Anti-requisites: {courseInfo.antirequisites}</p>
+                  <div onClick={() => this.handleRemoveCourseFromBuilder(course)}
+                       className={styles.removeClass}>
+                    <FontAwesomeIcon icon='times'/>
+                  </div>
                 </div>;
               } else {
-                return <div key={course.subject + course.catalogNumber}>
-                
-                </div>;
+                return '';
               }
             })}
           
@@ -121,7 +148,7 @@ class BuilderModule extends Component {
         
         </div>
         <div className={styles.timetable}>
-          {{/*this.state.selectedTerm*/} && <TimetableContainer selectedTerm={this.state.selectedTerm}/>}
+          {this.state.selectedTerm && <TimetableContainer selectedTerm={this.state.selectedTerm}/>}
         </div>
       </div>
     );

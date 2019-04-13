@@ -23,7 +23,16 @@ const mapDispatchToProps = (dispatch) => {
     builder: {
       addCourse: (course) => {
         dispatch(actions.addCourse(course));
-      }
+      },
+      removeCourse: (course) => {
+        dispatch(actions.removeCourse(course));
+      },
+      enableCourse: (course) => {
+        dispatch(actions.enableCourse(course));
+      },
+      disableCourse: (course) => {
+        dispatch(actions.disableCourse(course));
+      },
     }
   }
 };

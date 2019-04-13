@@ -8,7 +8,7 @@ $borderColorLight: #c1c1c1;
 
 .timetable {
   position: relative;
-  width: 90%;
+  width: 50%;
   margin-left: 5%;
   border: 1px solid $borderColorDark;
   border-bottom-width: 0;
@@ -61,6 +61,12 @@ $borderColorLight: #c1c1c1;
     left: 0;
     width: 18%;
     height: 3vh;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    flex-direction: column;
 
   }
 

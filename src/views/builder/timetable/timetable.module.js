@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styles from './timetable.module.scss';
 import { checks, helpers } from '../../../common';
 import { ClassTemplate, TimetableTemplate } from '../../../templates';
-import Button from "react-bootstrap/Button";
+import Button from 'react-bootstrap/Button';
 
 class TimetableModule extends Component {
   
@@ -23,7 +23,7 @@ class TimetableModule extends Component {
   }
   
   componentWillMount() {
-    this.generateClassCombinations()
+    this.generateClassCombinations();
   }
   
   generateClassCombinations() {
@@ -37,13 +37,20 @@ class TimetableModule extends Component {
         valid = false;
         break;
       }
+      if (!course.enabled) {
+        continue;
+      }
       const schedule = this.props._terms[this.props.selectedTerm][course.subject][course.catalogNumber];
       if (schedule['tutorials'].length === 0) {
         tmp.push([schedule['lectures']]);
         continue;
       }
       tmp.push(
-        schedule['lectures'].flatMap(lecture => schedule['tutorials'].map(tutorial => [lecture, tutorial]))
+        schedule['lectures'].flatMap(lecture => schedule['tutorials'].reduce((prev, tutorial) => {
+          if (!lecture['classes'].some(lClass => tutorial['classes'].some(iClass => checks.classes.overlap(lClass['date'], iClass['date']))))
+            prev.push([lecture, tutorial]);
+          return prev;
+        }, []))
       );
     }
     if (valid && tmp.length > 0) {
@@ -54,13 +61,14 @@ class TimetableModule extends Component {
         if (prev.length === 0) {
           return current;
         }
-        console.warn(current);
         return prev.flatMap(i => current.reduce((prev, l) => {
           if (!l.some(lClasses => lClasses['classes'].some(lClass => i.some(iClasses => iClasses['classes'].some(iClass => checks.classes.overlap(lClass['date'], iClass['date']))))))
             prev.push(i.concat(l));
           return prev;
-        }, []))
+        }, []));
       }, tmp[0]);
+    } else if (valid) {
+      this.classCombinations = [];
     }
   }
   
@@ -84,6 +92,7 @@ class TimetableModule extends Component {
         currentClassCombination: 0,
       });
       this.regenerateClassCombinations = true;
+      console.log(nextProps._builder.courses);
     }
   }
   
@@ -103,7 +112,7 @@ class TimetableModule extends Component {
           const et = helpers.timeToInteger(time['date']['end_time']);
           this.startTime = this.startTime > st ? Math.floor(st / 100) * 100 - 100 : this.startTime;
           this.endTime = this.endTime < et ? Math.ceil(et / 100) * 100 + 100 : this.endTime;
-        })
+        });
       });
       
       this.classes = this.classCombinations[this.state.currentClassCombination].map(Class => {
@@ -111,29 +120,29 @@ class TimetableModule extends Component {
                               class={Class}
                               startTime={this.startTime}
                               endTime={this.endTime}
-                              styles={styles}/>
+                              styles={styles}/>;
       });
       
       this.updateClasses = false;
+    } else if (this.updateClasses) {
+      this.classes = [];
     }
-    
     
     return (
       <div className={styles.container}>
         
         {this.classCombinations.length > 0 &&
-        <div>
+        <div style={{padding: '20px'}}>
           Class Combination {this.state.currentClassCombination + 1}/{this.classCombinations.length}
           <br/>
-          <Button varient="Primary" onClick={this.nextClassCombination}>Next</Button>
           <Button varient="Primary" onClick={this.previousClassCombination}>Previous</Button>
+          <Button varient="Primary" onClick={this.nextClassCombination}>Next</Button>
         </div>}
         
         <div className={styles.timetable}>
           <TimetableTemplate startTime={this.startTime} endTime={this.endTime} styles={styles}/>
           {this.classes}
         </div>
-        {JSON.stringify(this.classCombinations)}
       </div>
     );
   }

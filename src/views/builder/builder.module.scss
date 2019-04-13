@@ -56,9 +56,24 @@
     margin-top: 20px;
 
     .course {
-      width: 88%;
-      margin-left: 6%;
+      width: 100%;
       background: #63bdff;
+      margin-bottom: 10px;
+      padding: 10px;
+      position: relative;
+
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 50px;
+      }
+
+      .removeClass {
+        position: absolute;
+        top: 4%;
+        right: 4%;
+      }
+
     }
 
   }
