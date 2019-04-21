@@ -14,6 +14,7 @@ export default class ClassTemplate extends PureComponent {
           return days.map(day => {
             return <div key={info.date['start_time'] + info.date['end_time'] + day}
                         className={this.props.styles['classBlock']}
+                        onClick={() => this.props.pinClass(this.props.class)}
                         style={{
                           top: `${((stInt - this.props.startTime) / 100) * 6}vh`,
                           left: `${(10 + 18 * (constants.days[day] || 0))}%`,

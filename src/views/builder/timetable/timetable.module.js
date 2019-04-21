@@ -6,10 +6,15 @@ import Button from 'react-bootstrap/Button';
 
 class TimetableModule extends Component {
   
+  /**
+   * Class constructor
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
-      currentClassCombination: 0
+      currentClassCombination: 0,
+      pinnedClasses: []
     };
     this.classCombinations = [];
     this.startTime = 1000;
@@ -20,12 +25,19 @@ class TimetableModule extends Component {
     this.generateClassCombinations = this.generateClassCombinations.bind(this);
     this.nextClassCombination = this.nextClassCombination.bind(this);
     this.previousClassCombination = this.previousClassCombination.bind(this);
+    this.pinClass = this.pinClass.bind(this);
   }
   
+  /**
+   * Lifecycle: When the component mounts
+   */
   componentWillMount() {
     this.generateClassCombinations();
   }
   
+  /**
+   * Generate the different combinations for courses & classes
+   */
   generateClassCombinations() {
     console.warn('Regenerating class combinations');
     let tmp = [];
@@ -33,6 +45,7 @@ class TimetableModule extends Component {
     let valid = true;
     for (let i = 0; i < count; i++) {
       let course = this.props._builder.courses[i];
+      let pinnedIndex = this.state.pinnedClasses.findIndex(obj => obj['subject'] === course['subject'] && obj['catalogNumber'] === course['catalogNumber']);
       if (!checks.loaded.courseScheduleForTerm(this.props._terms, course, this.props.selectedTerm)) {
         valid = false;
         break;
@@ -40,9 +53,12 @@ class TimetableModule extends Component {
       if (!course.enabled) {
         continue;
       }
+      
       const schedule = this.props._terms[this.props.selectedTerm][course.subject][course.catalogNumber];
       if (schedule['tutorials'].length === 0) {
         tmp.push([schedule['lectures']]);
+        console.log(tmp[0]);
+        // tmp.push(pinnedIndex !== -1 ? [schedule['lectures'].find(obj => obj['class_number'] === this.state.pinnedClasses[pinnedIndex]['classNumber'])] : [schedule['lectures']]);
         continue;
       }
       tmp.push(
@@ -72,6 +88,9 @@ class TimetableModule extends Component {
     }
   }
   
+  /**
+   * Load the next class combination
+   */
   nextClassCombination() {
     this.updateClasses = true;
     this.setState(prev => ({
@@ -79,6 +98,9 @@ class TimetableModule extends Component {
     }));
   }
   
+  /**
+   * Load to previous class combination
+   */
   previousClassCombination() {
     this.updateClasses = true;
     this.setState(prev => ({
@@ -86,16 +108,34 @@ class TimetableModule extends Component {
     }));
   }
   
+  /**
+   * Pin a course to a specific time
+   * @param course
+   */
+  pinClass(Class) {
+    this.setState(prev => ({
+      pinnedClasses: [...prev.pinnedClasses, {subject: Class['subject'], catalogNumber: Class['catalogNumber'], classNumber: Class['class_number']}]
+    }));
+  }
+  
+  /**
+   * Lifecycle: When the component will receive new props
+   * @param nextProps
+   * @param nextContext
+   */
   componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps._builder.coursesChanged) {
       this.setState({
         currentClassCombination: 0,
       });
       this.regenerateClassCombinations = true;
-      console.log(nextProps._builder.courses);
     }
   }
   
+  /**
+   * Render function
+   * @returns {*}
+   */
   render() {
     
     if (this.props._builder.coursesChanged && this.regenerateClassCombinations) {
@@ -120,6 +160,7 @@ class TimetableModule extends Component {
                               class={Class}
                               startTime={this.startTime}
                               endTime={this.endTime}
+                              pinClass={this.pinClass}
                               styles={styles}/>;
       });
       

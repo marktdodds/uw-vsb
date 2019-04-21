@@ -7,6 +7,10 @@ import { checks } from '../../common';
 
 class BuilderModule extends Component {
   
+  /**
+   * Class constructor
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -92,6 +96,10 @@ class BuilderModule extends Component {
     return this.props._terms.availableCourses[selectedTerm].filter(course => course.code.includes(query.replace(/ /g, '').toUpperCase()));
   }
   
+  /**
+   * Class rendered (in JSX)
+   * @returns {*}
+   */
   render() {
     return (
       <div className={styles.container}>

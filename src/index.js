@@ -13,13 +13,14 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 library.add(faTimes, faCheck, faSquare);
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   reducers,
-  applyMiddleware(sagaMiddleware, logger),
+  composeWithDevTools(applyMiddleware(sagaMiddleware, logger)),
 );
 
 sagaMiddleware.run(rootSaga);
