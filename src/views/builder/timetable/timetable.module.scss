@@ -68,6 +68,10 @@ $borderColorLight: #c1c1c1;
     font-size: 12px;
     flex-direction: column;
 
+    &.pinned {
+      background: red;
+    }
+
   }
 
 }

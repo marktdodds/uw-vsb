@@ -59,10 +59,10 @@ class BuilderModule extends Component {
    */
   handleAddCourseToBuilder(event, course) {
     if (!checks.loaded.courseScheduleForTerm(this.props._terms, course, this.state.selectedTerm)) {
-      this.props.common.getCourseScheduleForTerm(this.state.selectedTerm, course.subject, course.catalogNumber);
+      this.props.common.getCourseScheduleForTerm(this.state.selectedTerm, course.subject, course.catalog_number);
     }
     if (!checks.loaded.courseInformation(this.props._courses, course)) {
-      this.props.common.getCourseInformation(course.subject, course.catalogNumber);
+      this.props.common.getCourseInformation(course.subject, course.catalog_number);
     }
     this.props.builder.addCourse(course);
     this.setState({
@@ -129,15 +129,15 @@ class BuilderModule extends Component {
             
             {this.props._builder.courses.map(course => {
               if (checks.loaded.courseInformation(this.props._courses, course)) {
-                const courseInfo = this.props._courses[course.subject][course.catalogNumber];
-                return <div key={course.subject + course.catalogNumber} className={styles.course}>
+                const courseInfo = this.props._courses[course.subject][course.catalog_number];
+                return <div key={course.subject + course.catalog_number} className={styles.course}>
                   <p>
-                    <span onClick={() => {this.handleToggleCourse(course)}}>
+                    <span onClick={() => {this.handleToggleCourse(course);}}>
                       <FontAwesomeIcon
                         style={{marginRight: '10px'}}
                         icon={course.enabled ? ['fas', 'check'] : ['far', 'square']}/>
                       </span>
-                    {course.subject + course.catalogNumber}: {courseInfo.title}
+                    {course.subject + course.catalog_number}: {courseInfo.title}
                   </p>
                   <p>Pre-requisites: {courseInfo.prerequisites}</p>
                   <p>Anti-requisites: {courseInfo.antirequisites}</p>

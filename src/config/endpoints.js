@@ -19,12 +19,12 @@ export default {
         const _subject = this;
         _subject.base = () => `${_courses.base()}/${subject}`;
         
-        _subject.catalogNumber = (catalogNumber) => new function () {
-          const _catalogNumber = this;
-          _catalogNumber.base = () => `${_subject.base()}/${catalogNumber}`;
-          _catalogNumber.schedule = () => `${_catalogNumber.base()}/schedule`;
-          _catalogNumber.prerequisites = () => `${_catalogNumber.base()}/prerequisites`;
-          _catalogNumber.examSchedule = () => `${_catalogNumber.base()}/examschedule`;
+        _subject.catalog_number = (catalog_number) => new function () {
+          const _catalog_number = this;
+          _catalog_number.base = () => `${_subject.base()}/${catalog_number}`;
+          _catalog_number.schedule = () => `${_catalog_number.base()}/schedule`;
+          _catalog_number.prerequisites = () => `${_catalog_number.base()}/prerequisites`;
+          _catalog_number.examSchedule = () => `${_catalog_number.base()}/examschedule`;
         }();
       }();
     }();
@@ -49,10 +49,10 @@ export default {
           _subject.base = () => `${_term.base()}/${subject}`;
           _subject.schedule = () => `${_subject.base()}/schedule`;
           _subject.enrollment = () => `${_subject.base()}/enrollment`;
-          _subject.catalogNumber = (catalogNumber) => new function () {
-            const _catalogNumber = this;
-            _catalogNumber.base = () => `${_subject.base()}/${catalogNumber}`;
-            _catalogNumber.schedule = () => `${_catalogNumber.base()}/schedule`;
+          _subject.catalog_number = (catalog_number) => new function () {
+            const _catalog_number = this;
+            _catalog_number.base = () => `${_subject.base()}/${catalog_number}`;
+            _catalog_number.schedule = () => `${_catalog_number.base()}/schedule`;
           }();
         }();
       }();

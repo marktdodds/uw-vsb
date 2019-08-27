@@ -17,9 +17,9 @@ export default {
     })
   },
   
-  getCourseScheduleForTerm: (termId, subject, catalogNumber) => {
+  getCourseScheduleForTerm: (termId, subject, catalog_number) => {
     return fetch(endpoints.uWaterlooApi.construct(
-      endpoints.uWaterlooApi.terms().term(termId).subject(subject).catalogNumber(catalogNumber).schedule()
+      endpoints.uWaterlooApi.terms().term(termId).subject(subject).catalog_number(catalog_number).schedule()
     ), {
       method: 'GET'
     })

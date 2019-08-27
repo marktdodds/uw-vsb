@@ -41,19 +41,19 @@ export const actions = {
   /*
   * Specific course schedule for a term
    */
-  getCourseScheduleForTerm: (termId, subject, catalogNumber) => ({
+  getCourseScheduleForTerm: (termId, subject, catalog_number) => ({
     type: symbols.GET_COURSE_SCHEDULE_FOR_TERM,
     selectedTerm: termId,
     subject: subject,
-    catalogNumber: catalogNumber
+    catalog_number: catalog_number
   }),
   
-  receivedCourseScheduleForTerm: (response, termId, subject, catalogNumber) => ({
+  receivedCourseScheduleForTerm: (response, termId, subject, catalog_number) => ({
     type: symbols.RECEIVED_COURSE_SCHEDULE_FOR_TERM,
     selectedTerm: termId,
     response: response,
     subject: subject,
-    catalogNumber: catalogNumber
+    catalog_number: catalog_number
   }),
   
   

@@ -18,12 +18,12 @@ export default (dispatch) => ({
     dispatch(termsActions.getCoursesForTerm(termId));
   },
   
-  getCourseScheduleForTerm: (termId, subject, catalogNumber) => {
-    dispatch(termsActions.getCourseScheduleForTerm(termId, subject, catalogNumber))
+  getCourseScheduleForTerm: (termId, subject, catalog_number) => {
+    dispatch(termsActions.getCourseScheduleForTerm(termId, subject, catalog_number))
   },
 
-  getCourseInformation: (subject, catalogNumber) => {
-    dispatch(coursesActions.getCourseInformation(subject, catalogNumber))
+  getCourseInformation: (subject, catalog_number) => {
+    dispatch(coursesActions.getCourseInformation(subject, catalog_number))
   }
   
 });

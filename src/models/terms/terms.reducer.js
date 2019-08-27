@@ -20,15 +20,15 @@ function terms(state = {
     case symbols.RECEIVED_COURSES_FOR_TERM:
       newState.availableCourses[action.selectedTerm] = action.response.data.map(course => ({
         subject: course['subject'],
-        catalogNumber: course['catalog_number'],
+        catalog_number: course['catalog_number'],
         code: course['subject'] + course['catalog_number'],
         description: course['title']
       }));
       break;
     
     case symbols.RECEIVED_COURSE_SCHEDULE_FOR_TERM:
-      helpers.createObjectPath(newState, action.selectedTerm, action.subject, action.catalogNumber);
-      newState[action.selectedTerm][action.subject][action.catalogNumber] = action.response.data.reduce((prev, item) => {
+      helpers.createObjectPath(newState, action.selectedTerm, action.subject, action.catalog_number);
+      newState[action.selectedTerm][action.subject][action.catalog_number] = action.response.data.reduce((prev, item) => {
         if (item['section'].includes('LEC')) {
           prev.lectures.push({...item});
         }

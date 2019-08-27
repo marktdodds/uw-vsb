@@ -22,10 +22,6 @@ class TimetableModule extends Component {
     this.classes = [];
     this.updateClasses = false;
     
-    this.generateClassCombinations = this.generateClassCombinations.bind(this);
-    this.nextClassCombination = this.nextClassCombination.bind(this);
-    this.previousClassCombination = this.previousClassCombination.bind(this);
-    this.pinClass = this.pinClass.bind(this);
   }
   
   /**
@@ -38,14 +34,13 @@ class TimetableModule extends Component {
   /**
    * Generate the different combinations for courses & classes
    */
-  generateClassCombinations() {
+  generateClassCombinations = () => {
     console.warn('Regenerating class combinations');
     let tmp = [];
     let count = this.props._builder.courses.length;
     let valid = true;
     for (let i = 0; i < count; i++) {
       let course = this.props._builder.courses[i];
-      let pinnedIndex = this.state.pinnedClasses.findIndex(obj => obj['subject'] === course['subject'] && obj['catalogNumber'] === course['catalogNumber']);
       if (!checks.loaded.courseScheduleForTerm(this.props._terms, course, this.props.selectedTerm)) {
         valid = false;
         break;
@@ -53,24 +48,23 @@ class TimetableModule extends Component {
       if (!course.enabled) {
         continue;
       }
-      
-      const schedule = this.props._terms[this.props.selectedTerm][course.subject][course.catalogNumber];
+      const schedule = this.props._terms[this.props.selectedTerm][course.subject][course.catalog_number];
+      let pinnedLecture = this.state.pinnedClasses.find(Class => checks.courses.match(course, Class) && checks.classes.isLecture(Class));
+      let pinnedTutorial = this.state.pinnedClasses.find(Class => checks.courses.match(course, Class) && !checks.classes.isLecture(Class));
       if (schedule['tutorials'].length === 0) {
-        tmp.push([schedule['lectures']]);
-        console.log(tmp[0]);
-        // tmp.push(pinnedIndex !== -1 ? [schedule['lectures'].find(obj => obj['class_number'] === this.state.pinnedClasses[pinnedIndex]['classNumber'])] : [schedule['lectures']]);
+        tmp.push(schedule['lectures'].filter(i => !pinnedLecture || checks.classes.match(i, pinnedLecture)).map(i => [i]));
         continue;
       }
       tmp.push(
         schedule['lectures'].flatMap(lecture => schedule['tutorials'].reduce((prev, tutorial) => {
-          if (!lecture['classes'].some(lClass => tutorial['classes'].some(iClass => checks.classes.overlap(lClass['date'], iClass['date']))))
+          if (!lecture['classes'].some(lClass => tutorial['classes'].some(iClass => checks.classes.overlap(lClass['date'], iClass['date']) || ((pinnedLecture && !checks.classes.match(lecture, pinnedLecture)) || (pinnedTutorial && !checks.classes.match(tutorial, pinnedTutorial))))))
             prev.push([lecture, tutorial]);
           return prev;
         }, []))
       );
     }
     if (valid && tmp.length > 0) {
-      this.classCombinations = tmp.slice(1).reduce((prev, current) => {
+      this.classCombinations = tmp.reduce((prev, current) => {
         if (current.length === 0) {
           return prev;
         }
@@ -82,41 +76,61 @@ class TimetableModule extends Component {
             prev.push(i.concat(l));
           return prev;
         }, []));
-      }, tmp[0]);
+      }, []);
     } else if (valid) {
       this.classCombinations = [];
     }
-  }
+  };
+  
+  /**
+   * Check if a course is pinned
+   * @param course The course to check
+   */
+  courseIsPinned = (course) => {
+    return this.state.pinnedClasses.some(obj => checks.classes.match(course, obj));
+  };
   
   /**
    * Load the next class combination
    */
-  nextClassCombination() {
+  nextClassCombination = () => {
     this.updateClasses = true;
     this.setState(prev => ({
       currentClassCombination: prev.currentClassCombination === this.classCombinations.length - 1 ? 0 : prev.currentClassCombination + 1
     }));
-  }
+  };
   
   /**
    * Load to previous class combination
    */
-  previousClassCombination() {
+  previousClassCombination = () => {
     this.updateClasses = true;
     this.setState(prev => ({
       currentClassCombination: prev.currentClassCombination === 0 ? this.classCombinations.length - 1 : prev.currentClassCombination - 1
     }));
-  }
+  };
   
   /**
    * Pin a course to a specific time
-   * @param course
+   * @param Class The class to pin
    */
-  pinClass(Class) {
-    this.setState(prev => ({
-      pinnedClasses: [...prev.pinnedClasses, {subject: Class['subject'], catalogNumber: Class['catalogNumber'], classNumber: Class['class_number']}]
-    }));
-  }
+  togglePinClass = (Class) => {
+    this.regenerateClassCombinations = true;
+    let pinnedIndex = this.state.pinnedClasses.findIndex(obj => checks.classes.match(Class, obj));
+    if (pinnedIndex === -1) {
+      this.setState(prev => ({
+        pinnedClasses: [...prev.pinnedClasses, {subject: Class['subject'], 'catalog_number': Class['catalog_number'], 'class_number': Class['class_number'], section: Class['section']}],
+        currentClassCombination: 0,
+      }));
+    } else {
+      let pinned = [...this.state.pinnedClasses];
+      pinned.splice(pinnedIndex, 1);
+      this.setState({
+        pinnedClasses: pinned,
+        currentClassCombination: 0,
+      });
+    }
+  };
   
   /**
    * Lifecycle: When the component will receive new props
@@ -137,15 +151,13 @@ class TimetableModule extends Component {
    * @returns {*}
    */
   render() {
-    
-    if (this.props._builder.coursesChanged && this.regenerateClassCombinations) {
+    if (this.props._builder.coursesChanged || this.regenerateClassCombinations) {
       this.generateClassCombinations();
       this.regenerateClassCombinations = false;
       this.updateClasses = true;
     }
     
     if (this.updateClasses && this.classCombinations.length > 0) {
-      
       this.classCombinations[this.state.currentClassCombination].forEach(Class => {
         Class['classes'].forEach(time => {
           const st = helpers.timeToInteger(time['date']['start_time']);
@@ -160,7 +172,8 @@ class TimetableModule extends Component {
                               class={Class}
                               startTime={this.startTime}
                               endTime={this.endTime}
-                              pinClass={this.pinClass}
+                              togglePinClass={this.togglePinClass}
+                              pinned={this.courseIsPinned(Class)}
                               styles={styles}/>;
       });
       

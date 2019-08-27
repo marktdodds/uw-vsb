@@ -21,7 +21,7 @@ class LookupModule extends Component {
       matchedCourses: [],
       courseToView: {
         subject: '',
-        catalogNumber: ''
+        catalog_number: ''
       }
     };
     
@@ -83,12 +83,12 @@ class LookupModule extends Component {
   * Get the schedule for a specific course in a specific term
    */
   getCourseLookup(course) {
-    this.props.common.getCourseInformation(course.subject, course.catalogNumber);
-    this.props.common.getCourseScheduleForTerm(this.state.selectedTerm, course.subject, course.catalogNumber);
+    this.props.common.getCourseInformation(course.subject, course.catalog_number);
+    this.props.common.getCourseScheduleForTerm(this.state.selectedTerm, course.subject, course.catalog_number);
     this.setState({
       courseToView: {
         subject: course.subject,
-        catalogNumber: course.catalogNumber,
+        catalog_number: course.catalog_number,
         view: true
       }
     });
@@ -99,7 +99,7 @@ class LookupModule extends Component {
    */
   
   courseScheduleForTerm(selectedTerm, course) {
-    return this.props.terms[selectedTerm][course.subject][course.catalogNumber];
+    return this.props.terms[selectedTerm][course.subject][course.catalog_number];
   }
   
   /*

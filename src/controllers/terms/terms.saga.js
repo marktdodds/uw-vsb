@@ -15,9 +15,9 @@ function* getCoursesForTerm(action) {
 }
 
 function* getCourseScheduleForTerm(action) {
-  const response = yield fetchCourses.getCourseScheduleForTerm(action.selectedTerm, action.subject, action.catalogNumber);
+  const response = yield fetchCourses.getCourseScheduleForTerm(action.selectedTerm, action.subject, action.catalog_number);
   const json = yield response.json();
-  yield put(actions.receivedCourseScheduleForTerm(json, action.selectedTerm, action.subject, action.catalogNumber));
+  yield put(actions.receivedCourseScheduleForTerm(json, action.selectedTerm, action.subject, action.catalog_number));
 }
 
 export default function* mainSaga() {

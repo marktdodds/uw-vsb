@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import TimetableModule from './timetable.module';
 
 const mapStateToProps = (state) => {
-  
   return {
     _builder: state.builder,
     _terms: state.terms

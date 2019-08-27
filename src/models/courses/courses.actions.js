@@ -8,10 +8,10 @@ export const actions = {
   /*
   * Specific course information for a specific course
    */
-  getCourseInformation: (subject, catalogNumber) => ({
+  getCourseInformation: (subject, catalog_number) => ({
     type: symbols.GET_COURSE_INFORMATION,
     subject: subject,
-    catalogNumber: catalogNumber
+    catalog_number: catalog_number
   }),
   
   receivedCourseInformation: (response) => ({
