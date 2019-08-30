@@ -17,17 +17,18 @@ export default {
   },
   
   integerToTime: (int) => {
-    return `${Math.floor(int / 100)}:${Math.round(((int % 100) / 100) * 60).toLocaleString(undefined, {minimumIntegerDigits: 2})}`;
+    return `${Math.floor(int / 100)}:${Math.round(((int % 100) / 100) * 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })}`;
   },
   
   timeToInteger: (time) => {
+    if (!time) return null;
     const split = time.split(':');
     if (split.length !== 2) throw Error('Invalid time');
-    return parseInt(split[0]) * 100 + (parseInt(split[1]) / 60) * 100
+    return parseInt(split[0]) * 100 + (parseInt(split[1]) / 60) * 100;
   },
   
   splitDays: (string) => {
-    return string.match(/([A-Z][^A-Z]*)/g);
+    return string ? string.match(/([A-Z][^A-Z]*)/g) : [];
   }
   
 };

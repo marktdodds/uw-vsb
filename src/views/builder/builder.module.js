@@ -117,11 +117,13 @@ class BuilderModule extends Component {
             <FormControl value={this.state.courseQuery} disabled={!this.state.selectedTerm || !this.props._terms.availableCourses[this.state.selectedTerm]}
                          onChange={this.handleCourseQuery} placeholder="Course"/>
             
-            {0 < this.state.matchedCourses.length && this.state.matchedCourses.length <= 10 &&
+            {0 < this.state.matchedCourses.length && this.state.courseQuery !== '' &&
             <div className={styles.courseMatches}>
-              {this.state.matchedCourses.map(course => {
+              {this.state.matchedCourses.slice(0, 10).map(course => {
                 return <div key={course.code} className={styles.course} onClick={e => this.handleAddCourseToBuilder(e, course)}>{course.code} - {course.description}</div>;
               })}
+              {this.state.matchedCourses.length > 10 &&
+              <div className={styles.course}>{this.state.matchedCourses.length - 10} more...</div>}
             </div>}
           </div>
           
@@ -134,7 +136,7 @@ class BuilderModule extends Component {
                   <p>
                     <span onClick={() => {this.handleToggleCourse(course);}}>
                       <FontAwesomeIcon
-                        style={{marginRight: '10px'}}
+                        style={{ marginRight: '10px' }}
                         icon={course.enabled ? ['fas', 'check'] : ['far', 'square']}/>
                       </span>
                     {course.subject + course.catalog_number}: {courseInfo.title}
@@ -147,6 +149,7 @@ class BuilderModule extends Component {
                   </div>
                 </div>;
               } else {
+                console.warn('Course not loaded!', this.props._courses, course);
                 return '';
               }
             })}

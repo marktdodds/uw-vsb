@@ -119,7 +119,7 @@ class TimetableModule extends Component {
     let pinnedIndex = this.state.pinnedClasses.findIndex(obj => checks.classes.match(Class, obj));
     if (pinnedIndex === -1) {
       this.setState(prev => ({
-        pinnedClasses: [...prev.pinnedClasses, {subject: Class['subject'], 'catalog_number': Class['catalog_number'], 'class_number': Class['class_number'], section: Class['section']}],
+        pinnedClasses: [...prev.pinnedClasses, { subject: Class['subject'], 'catalog_number': Class['catalog_number'], 'class_number': Class['class_number'], section: Class['section'] }],
         currentClassCombination: 0,
       }));
     } else {
@@ -158,12 +158,14 @@ class TimetableModule extends Component {
     }
     
     if (this.updateClasses && this.classCombinations.length > 0) {
+      this.startTime = 1000;
+      this.endTime = 1700;
       this.classCombinations[this.state.currentClassCombination].forEach(Class => {
         Class['classes'].forEach(time => {
           const st = helpers.timeToInteger(time['date']['start_time']);
           const et = helpers.timeToInteger(time['date']['end_time']);
-          this.startTime = this.startTime > st ? Math.floor(st / 100) * 100 - 100 : this.startTime;
-          this.endTime = this.endTime < et ? Math.ceil(et / 100) * 100 + 100 : this.endTime;
+          this.startTime = st && this.startTime > st ? Math.floor(st / 100) * 100 - 100 : this.startTime;
+          this.endTime = et && this.endTime < et ? Math.ceil(et / 100) * 100 + 100 : this.endTime;
         });
       });
       
@@ -185,13 +187,19 @@ class TimetableModule extends Component {
     return (
       <div className={styles.container}>
         
-        {this.classCombinations.length > 0 &&
-        <div style={{padding: '20px'}}>
-          Class Combination {this.state.currentClassCombination + 1}/{this.classCombinations.length}
+        <div style={{ padding: '20px' }}>
+          Class Combination {this.classCombinations.length > 0 ? `${this.state.currentClassCombination + 1}/${this.classCombinations.length}` : '0/0'}
           <br/>
           <Button varient="Primary" onClick={this.previousClassCombination}>Previous</Button>
           <Button varient="Primary" onClick={this.nextClassCombination}>Next</Button>
-        </div>}
+        </div>
+        
+        <div className={styles.classList}>
+          <div className={styles.header}>Class List</div>
+          {this.classCombinations.length > 0 && this.classCombinations[this.state.currentClassCombination].map(Class => {
+            return <div key={Class['class_number']}>{Class['subject']}{Class['catalog_number']} - {checks.classes.isLecture(Class) ? 'Lec' : 'Tut'} #{Class['class_number']}</div>;
+          })}
+        </div>
         
         <div className={styles.timetable}>
           <TimetableTemplate startTime={this.startTime} endTime={this.endTime} styles={styles}/>

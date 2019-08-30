@@ -5,6 +5,12 @@ import fetchCourses from './courses.fetch';
 function* getCourseInformation(action) {
   const response = yield fetchCourses.getCourseInformation(action.subject, action.catalog_number);
   const json = yield response.json();
+  json['data'] = {
+    subject: action.subject,
+    catalog_number: action.catalog_number,
+    description: 'No information found on server',
+    ...json['data']
+  };
   yield put(actions.receivedCourseInformation(json));
 }
 

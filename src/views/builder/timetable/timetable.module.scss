@@ -75,3 +75,18 @@ $borderColorLight: #c1c1c1;
   }
 
 }
+
+.classList {
+  width: 45%;
+  padding-left: 3%;
+  float: right;
+  box-sizing: border-box;
+
+  .header {
+    text-align: center;
+    font-size: 1.2em;
+    text-decoration: underline;
+    padding-bottom: 10px;
+  }
+
+}
