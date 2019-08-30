@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-It is currently live at: [https://uwvsb.netlify.com](https://uwvsb.netlify.com)
+It is currently live at: [https://markdodds.ca](https://markdodds.ca)
 
 ## Available Scripts
 
